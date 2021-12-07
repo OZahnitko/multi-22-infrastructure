@@ -1,0 +1,48 @@
+name: Multi-22, Seb!
+on:
+  push:
+    - main
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+jobs:
+  init_terraform:
+    name: Initialize Terraform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+      - name: Format Terraform configuration
+        id: fmt
+        working-directory: ./terraform
+        run: terraform fmt
+      - name: Initialize Terraform
+        id: init
+        working-directory: ./terraform
+        run: terraform init
+      - name: Validate Terraform configuration
+        id: validate
+        working-directory: ./terraform
+        run: terraform validate
+  terraform_plan:
+    name: Plan for Terraform configuration
+    runs-on: ubuntu-latest
+    needs: [init_terraform]
+    steps:
+      - name: Run Terraform Plan
+        id: plan
+        working-directory: ./terraform
+        run: terraform plan -no-color >> ../plan.log
+  terraform_apply:
+    name: Apply Terraform configuration
+    runs-on: ubuntu-latest
+    needs: [terraform_plan]
+    steps:
+      - name: Apply Terraform Configuration
+        id: apply
+        working-directory: ./terraform
+        run: terraform apply
