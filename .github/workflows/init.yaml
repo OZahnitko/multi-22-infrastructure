@@ -29,22 +29,12 @@ jobs:
         id: validate
         working-directory: ./terraform
         run: terraform validate
-  terraform_plan:
-    name: Plan for Terraform configuration
-    runs-on: ubuntu-latest
-    needs: [init_terraform]
-    steps:
       - name: Run Terraform Plan
         id: plan
         working-directory: ./terraform
         run: |
           ls -la
           terraform plan -no-color > ../plan.log
-  terraform_apply:
-    name: Apply Terraform configuration
-    runs-on: ubuntu-latest
-    needs: [terraform_plan]
-    steps:
       - name: Apply Terraform Configuration
         id: apply
         working-directory: ./terraform
