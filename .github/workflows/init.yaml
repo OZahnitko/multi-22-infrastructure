@@ -38,6 +38,7 @@ jobs:
         id: plan
         working-directory: ./terraform
         run: |
+          ls -la
           terraform plan -no-color > ../plan.log
   terraform_apply:
     name: Apply Terraform configuration
