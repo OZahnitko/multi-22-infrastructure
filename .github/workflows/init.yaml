@@ -32,9 +32,7 @@ jobs:
       - name: Run Terraform Plan
         id: plan
         working-directory: ./terraform
-        run: |
-          ls -la
-          terraform plan -no-color > ../plan.log
+        run: terraform plan -no-color
       - name: Apply Terraform Configuration
         id: apply
         working-directory: ./terraform
